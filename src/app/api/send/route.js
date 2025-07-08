@@ -21,7 +21,7 @@ export async function POST(request) {
     const data = await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>", // Alamat pengirim (wajib dari Resend untuk development)
       to: ["pramudyanuar@gmail.com"], // GANTI DENGAN EMAIL ANDA!
-      subject: `Pesan Baru dari Portofolio - ${name}`,
+      subject: `Pesan Baru dari - ${name}`,
       reply_to: email, // Agar saat Anda membalas, email langsung ditujukan ke pengirim
       html: `<p>You have a new message from your portfolio contact form:</p>
              <p><strong>Name:</strong> ${name}</p>

@@ -35,20 +35,31 @@ const ContactForm: React.FC = () => {
     }
     setIsLoading(true);
     const toastId = toast.loading('Mengirim pesan...');
+    
     try {
-      // Simulasi pengiriman data
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const response = { ok: true }; // Contoh response sukses
+      // ===== UBAH BAGIAN INI =====
+      // Hapus kode simulasi dan ganti dengan fetch
+      const response = await fetch('/api/send', { // Asumsi API route Anda ada di /api/send
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      // Ambil data JSON dari respons
+      const result = await response.json(); 
 
       if (response.ok) {
         toast.success('Pesan berhasil terkirim!', { id: toastId });
-        setFormData({ name: '', email: '', message: '' });
+        setFormData({ name: '', email: '', message: '' }); // Reset form
       } else {
-        // Logika jika error
+        // Tampilkan pesan error dari API jika ada
+        toast.error(result.error || 'Gagal mengirim pesan.', { id: toastId });
       }
+      // ===== AKHIR PERUBAHAN =====
+
     } catch (error) {
-      // Logika jika error
       toast.error('Terjadi kesalahan saat mengirim pesan.', { id: toastId });
       console.error('Error sending message:', error);
     } finally {
