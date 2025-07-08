@@ -1,26 +1,212 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-color: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-color: #3399ff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+  background-color: #0c0d14;
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Starfield animation */
+.stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.stars {
+  position: absolute;
+  width: 100%;
+  height: 200vh;
+  background: black
+    url(https://www.transparenttextures.com/patterns/stardust.png) repeat;
+}
+
+#stars1 {
+  background-size: auto;
+  animation: star-move 200s linear infinite;
+}
+
+#stars2 {
+  background-size: auto;
+  animation: star-move 100s linear infinite;
+}
+
+@keyframes star-move {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100vh);
+  }
+}
+
+@keyframes bounce-custom {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-custom {
+  animation: bounce-custom 2s ease-in-out infinite;
+}
+
+.orbital-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(1px); /* Sedikit blur untuk efek yang lebih lembut */
+}
+
+/*
+ * Base style untuk setiap lintasan.
+ * Kita menggunakan ::before untuk lintasan dan ::after untuk dot.
+ */
+.orbit-path {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform-origin: center;
+  /* Animasi untuk memudarkan (fade in/out) seluruh lintasan */
+  animation: fade-in-out 10s infinite;
+}
+
+/* Jalur lintasan (track) */
+.orbit-path::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(0, 191, 255, 0.2); /* Warna biru terang transparan */
+  border-radius: 50%;
+  /* Memotong setengah lingkaran di sisi kanan */
+  clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%);
+}
+
+/* Dot yang bergerak */
+.orbit-path::after {
+  content: '';
+  position: absolute;
+  top: 50%; /* Mulai di tengah secara vertikal */
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background-color: #00bfff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00bfff, 0 0 15px #00bfff;
+  /* Animasi orbit untuk dot */
+  animation: orbit 8s linear infinite;
+}
+
+/*
+ * Variasi untuk setiap lintasan untuk menciptakan keacakan
+ */
+.path-1 {
+  width: 900px;
+  height: 900px;
+  margin: -450px 0 0 -450px;
+  transform: rotate(20deg);
+  animation-delay: 0s; /* Mulai segera */
+}
+.path-1::after {
+  animation-duration: 10s; /* Durasi orbit dot */
+  width: 6px;
+  height: 6px;
+}
+
+.path-2 {
+  width: 1100px;
+  height: 1100px;
+  margin: -550px 0 0 -550px;
+  transform: rotate(-30deg);
+  animation-delay: -5s; /* Mulai di tengah siklus animasinya */
+}
+.path-2::after {
+  animation-duration: 14s; /* Lebih lambat */
+  background-color: #9370db; /* Warna berbeda */
+  box-shadow: 0 0 10px #9370db, 0 0 15px #9370db;
+}
+
+.path-3 {
+  width: 750px;
+  height: 750px;
+  margin: -375px 0 0 -375px;
+  transform: rotate(50deg);
+  animation-delay: -2s; /* Mulai sedikit setelah path-1 */
+}
+.path-3::after {
+  animation-duration: 8s; /* Lebih cepat */
+  width: 4px;
+  height: 4px;
+}
+
+/*
+ * Keyframes
+ */
+
+/* Animasi untuk memudarkan seluruh lintasan */
+@keyframes fade-in-out {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+}
+
+/* Animasi untuk pergerakan dot di sepanjang lintasan */
+@keyframes orbit {
+  from {
+    /* Menggunakan variabel CSS untuk radius, 50% dari ukuran parent */
+    transform: rotate(0deg) translateX(50%) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(50%) rotate(-360deg);
+  }
+}
+
+/* Penyesuaian Responsif */
+@media (max-width: 768px) {
+  .orbital-container {
+    transform: scale(0.8) translateX(-15%); /* Kecilkan dan geser sedikit */
+    filter: blur(0.5px);
+  }
 }
